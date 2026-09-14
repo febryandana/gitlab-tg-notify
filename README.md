@@ -7,9 +7,6 @@ threaded as a reply to the message that first announced the issue. Optional
 Telegram forum "Topics" support routes each GitLab project to its own topic
 in the same group.
 
-Full design and rationale: [`plan/gitlab-telegram-bot-prd.md`](plan/gitlab-telegram-bot-prd.md).
-Agent/contributor quick-reference: [`AGENTS.md`](AGENTS.md).
-
 ## Features
 
 - **One-way GitLab → Telegram bridge.** Listens for GitLab's `Issue Hook`,
@@ -165,7 +162,7 @@ dropping that project's notifications later.
 3. In GitLab, add a project webhook pointing at
    `https://<your-host>/webhook/gitlab` with the same secret as
    `gitlab.webhook_secret`, and enable the **Issues** and **Comments**
-   triggers (see the full walkthrough in the PRD, §16).
+   triggers.
 4. Run locally:
    ```sh
    go run ./cmd/bot
@@ -178,6 +175,59 @@ dropping that project's notifications later.
 `CONFIG_PATH` overrides the config file location (default
 `/app/config.yaml`); the Docker Compose setup mounts `./config.yaml` there
 read-only and persists the SQLite file in a named volume.
+
+## Setup Tutorial
+
+### 1 Create the Telegram bot
+
+1. Open Telegram. Search for **@BotFather**.
+2. Send `/newbot`.
+3. Give the bot a display name and a username (must end in `bot`).
+4. BotFather replies with a **token**. Save it. This goes into `telegram.bot_token` in the config.
+
+### 2 Create the group and add the bot
+
+1. Create a new Telegram group, or use an existing one.
+2. Open the group. Tap **Add members**. Search for your bot's username. Add it.
+3. Open **Administrators**. Add the bot as an admin.
+4. Give the bot, at minimum, the **Send Messages** right. "Manage Topics" is not required, since the bot does not create topics.
+
+### 3 Turn on Topics and create topics by hand
+
+1. Open the group. Tap the 3-dot menu (top-right). Tap **Edit**.
+2. Find **Topics**. Turn the toggle on. The group becomes a forum group.
+3. Tap **Create New Topic**. Name it after the GitLab project (for example, `backend/api`).
+4. Repeat for every project you plan to map in the config file.
+
+### 4 Get each topic's thread ID
+
+1. Open the topic.
+2. Tap the topic's name, at the top.
+3. Choose **Copy Topic Link**.
+4. The link looks like `https://t.me/c/1234567890/15`.
+5. The **last number** (`15` here) is the `telegram_message_thread_id`. Put it in the config, next to the matching project.
+
+### 5 Get the group's `chat_id`
+
+1. Make sure the bot is already in the group (Section 16.2).
+2. Send any message in the group.
+3. In a browser, open: `https://api.telegram.org/bot<YOUR_TOKEN>/getUpdates`.
+4. Find the `chat` object. Its `id` field is the `chat_id` (a negative number for groups). Put it in `telegram.chat_id`.
+
+### 6 Set up the GitLab webhook (repeat per project)
+
+1. Open the GitLab project. Go to **Settings → Webhooks**.
+2. Under **URL**, enter the receiver's public address, plus the configured `webhook_path` — for example `https://your-receiver.example.com/webhook/gitlab`.
+3. Under **Secret Token**, enter a random string. Put the same string in `gitlab.webhook_secret` in the config.
+4. Under **Trigger**, turn on:
+   - Issues events
+   - Confidential issues events
+   - Comments
+   - Confidential comments
+5. Leave **Enable SSL verification** on, unless the receiver uses a self-signed certificate.
+6. Click **Add webhook**.
+7. Click **Test**, then choose "Issues events." Confirm GitLab shows a green success mark.
+8. Add the project's `gitlab_project_id` and `telegram_message_thread_id` to the bot's `config.yaml`, then restart the bot so it picks up the new project.
 
 ## Development
 
@@ -196,9 +246,9 @@ CGO_ENABLED=0 go build ./...
 
 ## Non-goals and future work
 
-Out of scope for this version (see PRD §3, §17):
+Out of scope or future plan for this version:
 
-- Merge request, pipeline, and wiki events.
+- Repository push, Merge request, pipeline, and wiki events.
 - Any Telegram → GitLab action — this is a strictly one-way flow.
 - Automatic Telegram topic creation (topics must be created manually and
   mapped in `config.yaml`).
