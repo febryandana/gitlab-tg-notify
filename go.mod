@@ -1,0 +1,27 @@
+module github.com/febryandana/gitlab-tg-notify
+
+go 1.25.0
+
+require (
+	github.com/PaulSonOfLars/gotgbot/v2 v2.0.0-rc.36
+	gitlab.com/gitlab-org/api/client-go v1.46.0
+	gopkg.in/yaml.v3 v3.0.1
+	modernc.org/sqlite v1.58.0
+)
+
+require (
+	github.com/dustin/go-humanize v1.0.1 // indirect
+	github.com/google/go-querystring v1.2.0 // indirect
+	github.com/google/uuid v1.6.0 // indirect
+	github.com/hashicorp/go-cleanhttp v0.5.2 // indirect
+	github.com/hashicorp/go-retryablehttp v0.7.8 // indirect
+	github.com/mattn/go-isatty v0.0.24 // indirect
+	github.com/ncruces/go-strftime v1.0.0 // indirect
+	github.com/remyoudompheng/bigfft v0.0.0-20230129092748-24d4a6f8daec // indirect
+	golang.org/x/oauth2 v0.34.0 // indirect
+	golang.org/x/sys v0.47.0 // indirect
+	golang.org/x/time v0.14.0 // indirect
+	modernc.org/libc v1.75.6 // indirect
+	modernc.org/mathutil v1.7.1 // indirect
+	modernc.org/memory v1.12.1 // indirect
+)

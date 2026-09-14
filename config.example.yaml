@@ -1,0 +1,34 @@
+# config.yaml
+#
+# Copy this file to config.yaml, fill in real values, and mount it into the
+# container read-only (see docker-compose.yml). config.yaml itself is
+# gitignored — never commit real tokens/secrets.
+
+server:
+  listen_addr: "0.0.0.0:8080"
+  webhook_path: "/webhook/gitlab"
+
+telegram:
+  bot_token: "123456789:AA...your-bot-token..."
+  chat_id: -1001234567890
+  use_topics: true          # false = plain group, no topics, no thread IDs needed
+
+gitlab:
+  base_url: "https://gitlab.example.com"
+  webhook_secret: "a-long-random-string"
+
+database:
+  path: "/app/data/bot.db"
+
+logging:
+  level: "info"             # debug | info | warn | error
+  format: "text"            # text | json
+
+# Only projects listed here are processed. Anything else is ignored.
+projects:
+  - gitlab_project_id: 42
+    gitlab_project_path: "backend/api"
+    telegram_message_thread_id: 15    # required if use_topics is true
+  - gitlab_project_id: 57
+    gitlab_project_path: "infra/openstack"
+    telegram_message_thread_id: 22

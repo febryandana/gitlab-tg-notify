@@ -1,0 +1,43 @@
+# --- Version control ---
+.git/
+.gitignore
+
+# --- Secrets and local config ---
+# Real config with real tokens must never be baked into the image.
+# It is mounted at runtime as a volume (see docker-compose.yml).
+config.yaml
+.env
+.env.*
+*.local.yaml
+
+# --- Runtime data ---
+*.db
+*.db-journal
+*.db-wal
+*.db-shm
+/data/
+
+# --- Logs ---
+*.log
+
+# --- Editor / IDE ---
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# --- OS files ---
+.DS_Store
+Thumbs.db
+
+# --- Docs and non-build files (not needed inside the image) ---
+*.md
+docs/
+
+# --- Test / coverage ---
+coverage.out
+coverage.html
+
+# --- Docker-related files not needed inside their own build context ---
+Dockerfile
+docker-compose.yml

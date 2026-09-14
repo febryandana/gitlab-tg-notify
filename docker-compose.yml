@@ -1,0 +1,15 @@
+services:
+  gitlab-tg-notify:
+    build: .
+    container_name: gitlab-tg-notify
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./config.yaml:/app/config.yaml:ro
+      - bot-data:/app/data
+    environment:
+      - CONFIG_PATH=/app/config.yaml
+
+volumes:
+  bot-data:

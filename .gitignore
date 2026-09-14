@@ -1,0 +1,50 @@
+# --- Go build output ---
+/bin/
+/dist/
+/out/
+gitlab-tg-notify
+*.exe
+*.test
+
+# --- Go tooling ---
+*.o
+*.a
+vendor/
+
+# --- Secrets and local config ---
+# config.example.yaml IS committed. Your real config, with real tokens, is not.
+config.yaml
+.env
+.env.*
+*.local.yaml
+
+# --- Runtime data ---
+# SQLite database and its journal/WAL files, and any local data directory.
+*.db
+*.db-journal
+*.db-wal
+*.db-shm
+/data/
+
+# --- Logs ---
+*.log
+
+# --- Editor / IDE ---
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# --- OS files ---
+.DS_Store
+Thumbs.db
+
+# --- Test / coverage ---
+coverage.out
+coverage.html
+
+# --- Planning Stage ---
+plan/
+.claude
+AGENTS.md
+CLAUDE.md
